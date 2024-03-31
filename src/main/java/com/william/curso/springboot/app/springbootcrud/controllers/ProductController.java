@@ -49,7 +49,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result){ //se importa @Valid de validation, configurado en pom, Binding Result encapsula todas las validaciones que se hace en el request    //primero se realiza la validación del objeto Product utilizando la anotación @Valid y Si se encuentran errores de validación durante este proceso, Spring los captura y los almacena en el objeto BindingResult
+    public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result){ //se importa @Valid de validation, configurado en pom, Binding Result encapsula todas las validaciones que se hace en el request    
+        //primero se realiza la validación del objeto Product utilizando la anotación @Valid y Si se encuentran errores de validación durante este proceso, Spring los captura y los almacena en el objeto BindingResult
         //validation.validate(product, result); //validando usando la clase personalizada de errores
         if(result.hasFieldErrors()){
             return validation(result);
