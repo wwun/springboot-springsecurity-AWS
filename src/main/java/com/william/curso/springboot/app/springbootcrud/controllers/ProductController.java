@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import com.william.curso.springboot.app.springbootcrud.services.ProductService;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins="http://localhost:4200", originPatterns="*")   //v215  etiqueta para compartir información con una aplicación externa
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -34,11 +36,13 @@ public class ProductController {
     // @Autowired
     // private ProductValidation validation;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")    //la diferencia con hacerlo en config es que acá no se puede hacer dinámico utilizando un for para diferentes opciones obteniendo las url de una tabla
     @GetMapping
     public List<Product> list(){
         return service.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> view(@PathVariable Long id){
         Optional<Product> productOptional = service.findById(id);
@@ -48,6 +52,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result){ //se importa @Valid de validation, configurado en pom, Binding Result encapsula todas las validaciones que se hace en el request    
         //primero se realiza la validación del objeto Product utilizando la anotación @Valid y Si se encuentran errores de validación durante este proceso, Spring los captura y los almacena en el objeto BindingResult
@@ -58,6 +63,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(product));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Product product, BindingResult result, @PathVariable Long id){    //BindingResult debe estar a la derecha del valor que se va a validar
         //validation.validate(product, result); //validando usando la clase personalizada de errores
@@ -72,6 +78,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         Optional<Product> productOptional = service.delete(id);
