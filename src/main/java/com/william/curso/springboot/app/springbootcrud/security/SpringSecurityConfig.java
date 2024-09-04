@@ -22,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.william.curso.springboot.app.springbootcrud.security.filter.JwtAuthenticationFilter;
+import com.william.curso.springboot.app.springbootcrud.security.filter.JwtValidationFilter;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)   //activa las etiquetas hasRoles que se utilizan como anotaciones, no se necesita si se habilitaran acá

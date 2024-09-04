@@ -25,7 +25,7 @@ import com.william.curso.springboot.app.springbootcrud.services.ProductService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins="http://localhost:4200", originPatterns="*")   //v215  etiqueta para compartir información con una aplicación externa
+//@CrossOrigin(origins="http://localhost:4200", originPatterns="*")   //v215  etiqueta para compartir información con una aplicación externa
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {

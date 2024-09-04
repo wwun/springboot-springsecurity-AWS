@@ -2,7 +2,6 @@ package com.william.curso.springboot.app.springbootcrud.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 
 import com.william.curso.springboot.app.springbootcrud.services.UserService;
 
