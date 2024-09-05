@@ -45,12 +45,12 @@ public class JwtValidationFilter extends BasicAuthenticationFilter{
             chain.doFilter(request, response);
             return;
         }
-        String token = header.replace(PREFIX_TOKEN, "");                //se quita el bearer
-
+        String token = header.replace(PREFIX_TOKEN, "").trim();                //se quita el bearer para poder trabajar solo con el token
+        System.out.println("tokeeeeen: "+token);
         try{
             Claims claims = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
             //v210  validando token
-            String username = (String)claims.get("username");  //de otra manera: String username = claims.getSubject();
+            String username = claims.getSubject();  //de otra manera: String username = (String)claims.get("username");
             Object authoritiesClaims = claims.get("authorities");   //lo que se pasa como argumento es tal como se definió en successfulAuthentication de JwtAuthenticationFilter
 
             Collection<? extends GrantedAuthority> authorities = Arrays.asList(
@@ -59,7 +59,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter{
                 .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);    //el segundo argumento es null porque solo se está validando el token, sino podría ir password
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);  //SecurityContextHolder: Es una clase proporcionada por Spring Security que se utiliza para acceder al contexto de seguridad de la aplicación.	getContext(): Este método devuelve el contexto de seguridad actual, que contiene información sobre la autenticación y autorización del usuario.	setAuthentication(authenticationToken): Este método establece el objeto de autenticación proporcionado (authenticationToken) en el contexto de seguridad actua
+            SecurityContextHolder .getContext().setAuthentication(authenticationToken);  //SecurityContextHolder: Es una clase proporcionada por Spring Security que se utiliza para acceder al contexto de seguridad de la aplicación.	getContext(): Este método devuelve el contexto de seguridad actual, que contiene información sobre la autenticación y autorización del usuario.	setAuthentication(authenticationToken): Este método establece el objeto de autenticación proporcionado (authenticationToken) en el contexto de seguridad actua
             chain.doFilter(request, response);  //esto es para continuar con los otros filtros que se están aplicando
             //v210
         }catch(JwtException e){

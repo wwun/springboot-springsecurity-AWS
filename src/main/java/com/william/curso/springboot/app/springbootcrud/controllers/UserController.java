@@ -33,7 +33,7 @@ public class UserController {
         return service.findAll();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")   //reemplaza hasRole de SpringSecurityConfig
+    @PreAuthorize("hasRole('ADMIN')")   //reemplaza hasRole de SpringSecurityConfig, admin admin
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result){
         if(result.hasFieldErrors()){

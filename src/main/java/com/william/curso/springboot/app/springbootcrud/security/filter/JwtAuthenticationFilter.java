@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.core.userdetails.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -25,6 +24,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import com.william.curso.springboot.app.springbootcrud.entities.User;
 import static com.william.curso.springboot.app.springbootcrud.security.TokenJwtConfig.*;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
@@ -32,8 +32,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationManager authenticationManager;    
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-        
+        this.authenticationManager = authenticationManager;        
     }
 
     @Override
@@ -42,7 +41,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = null;
         String username = null;
         String password = null;
-
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), User.class);  //Esta línea de código crea un nuevo objeto ObjectMapper, que es una clase de la biblioteca Jackson utilizada para convertir entre objetos Java y JSON. Luego, utiliza el método readValue() para leer y convertir el flujo de entrada de la solicitud HTTP (request.getInputStream()) en un objeto de la clase User. Esto es útil para deserializar los datos JSON enviados en el cuerpo de la solicitud HTTP a un objeto Java User, lo que permite al servidor procesar y trabajar con esos datos en la aplicación
             username = user.getUsername();
@@ -63,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,    //v205  se ejecuta si todo sale bien
             Authentication authResult) throws IOException, ServletException {
         
-        com.william.curso.springboot.app.springbootcrud.entities.User user = (com.william.curso.springboot.app.springbootcrud.entities.User)authResult.getPrincipal();    //obtiene el principal del resultado de la autenticación (authResult). En un contexto de autenticación en Spring Security, el "principal" representa al usuario autenticado. La expresión authResult.getPrincipal() devuelve el objeto principal asociado con la autenticación exitosa
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User)authResult.getPrincipal();    //obtiene el principal del resultado de la autenticación (authResult). En un contexto de autenticación en Spring Security, el "principal" representa al usuario autenticado. La expresión authResult.getPrincipal() devuelve el objeto principal asociado con la autenticación exitosa
         String username = user.getUsername();
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities(); //"authorities" (autoridades) representan los permisos o roles concedidos a un usuario dentro del sistema. Estos permisos determinan qué acciones o recursos puede acceder o modificar el usuario en la aplicación
         //authResult.getAuthorities(): Este método devuelve una colección de objetos GrantedAuthority, que representan los roles o permisos del usuario autenticado. Los roles son concedidos durante el proceso de autenticación y representan los niveles de acceso o las capacidades del usuario dentro del sistema

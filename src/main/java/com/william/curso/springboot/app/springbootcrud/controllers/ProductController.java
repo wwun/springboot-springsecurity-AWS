@@ -36,17 +36,17 @@ public class ProductController {
     // @Autowired
     // private ProductValidation validation;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")    //la diferencia con hacerlo en config es que acá no se puede hacer dinámico utilizando un for para diferentes opciones obteniendo las url de una tabla
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")    //la diferencia con hacerlo en config es que acá no se puede hacer dinámico utilizando un for para diferentes opciones obteniendo las url de una tabla
     public List<Product> list(){
         return service.findAll();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<?> view(@PathVariable Long id){
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<?> view(@PathVariable Long id) {
         Optional<Product> productOptional = service.findById(id);
-        if(productOptional.isPresent()){
+        if (productOptional.isPresent()) {
             return ResponseEntity.ok(productOptional.orElseThrow());
         }
         return ResponseEntity.notFound().build();
@@ -78,11 +78,11 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Product> productOptional = service.delete(id);
-        if(productOptional.isPresent()){
+        if (productOptional.isPresent()) {
             return ResponseEntity.ok(productOptional.orElseThrow());
         }
         return ResponseEntity.notFound().build();
@@ -92,8 +92,8 @@ public class ProductController {
         Map<String, String> errors = new HashMap<>();
 
         result.getFieldErrors().forEach(err -> {
-            errors.put(err.getField(), "El campo "+ err.getField() + " "+ err.getDefaultMessage());
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
         });
-        return ResponseEntity.badRequest().body(errors);    //badRequest es lo mismo que colocar status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.badRequest().body(errors);
     }
 }
